@@ -1,4 +1,4 @@
-
+#version 120 
 
 #ifdef GL_ES
 precision mediump float;
@@ -29,10 +29,7 @@ attribute vec4      a_position;
 
 varying vec4        v_position;
 
-#ifdef MODEL_VERTEX_COLOR
-attribute vec4      a_color;
 varying vec4        v_color;
-#endif
 
 #ifdef MODEL_VERTEX_NORMAL
 attribute vec3      a_normal;
@@ -66,26 +63,11 @@ void main(void) {
     v_position.x *= aspectRatio;
 
     vec4 tex = texture2D(u_tex0, v_texcoord);
-    v_position.z += luma(tex);
-    
-    #ifdef MODEL_VERTEX_COLOR
-    v_color = a_color;
-    #endif
-    
-    #ifdef MODEL_VERTEX_NORMAL
-    v_normal = vec4(u_modelMatrix * vec4(a_normal, 0.0) ).xyz;
-    #endif
-    
-    #ifdef MODEL_VERTEX_TEXCOORD
-    v_texcoord = a_texcoord;
-    #endif
-    
-    #ifdef MODEL_VERTEX_TANGENT
-    v_tangent = a_tangent;
-    vec3 worldTangent = a_tangent.xyz;
-    vec3 worldBiTangent = cross(v_normal, worldTangent);// * sign(a_tangent.w);
-    v_tangentToWorld = mat3(normalize(worldTangent), normalize(worldBiTangent), normalize(v_normal));
-    #endif
+    float lumaValue = luma(tex);
+    v_position.z += lumaValue;
+
+    gl_PointSize = 10.0 + 20.0 * lumaValue;
+    v_color = tex;
     
     gl_Position = u_projectionMatrix * u_viewMatrix * v_position;
 }
