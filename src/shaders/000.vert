@@ -50,10 +50,10 @@ void main(void) {
 
     float lumaV = luma(tex);
     gl_PointSize = 1.0 + mix(
-        2.0,
-        (10.0 * pow(1.0 - v_cam, 3.0) + 10.0 * pow(lumaV, 3.0)) * (1.0 + 5.0 * pow(ry, 2.0)),
+        4.0,
+        (100.0 * pow(1.0 - v_cam, 3.0) + 10.0 * pow(lumaV, 3.0)) * (1.0 + 5.0 * pow(ry, 2.0)),
         1.0 - v_cam
-    ) * 5.0;
+    );
 
     v_color = tex;
     gl_Position = u_projectionMatrix * u_viewMatrix * v_position;
